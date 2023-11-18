@@ -12,6 +12,6 @@
     "build": "npm run build:client",
     "build:client": "cd client && npm run build",
     "start": "cd server && npm start",
-    "pushgit": "git push origin master && git push heroku master"
+    "gitpush": "git push origin master && git push heroku master"
   }
 }
