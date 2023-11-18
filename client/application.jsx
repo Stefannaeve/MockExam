@@ -40,7 +40,16 @@ function MovieList() {
 
 export function Application(){
     return <BrowserRouter>
+        <header>
         <h1>Movie Application</h1>
+        </header>
+        <nav>
+                <li><Link to="/">Home</Link></li>
+        </nav>
+        <main>
+            <TodoRoutes/>
+        </main>
+
 
     </BrowserRouter>
 }
