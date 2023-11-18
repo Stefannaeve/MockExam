@@ -44,10 +44,10 @@ export function Application(){
         <h1>Movie Application</h1>
         </header>
         <nav>
-                <li><Link to="/">Home</Link></li>
+                {/*<li><Link to="/">Home</Link></li>*/}
         </nav>
         <main>
-            <TodoRoutes/>
+            {/*<TodoRoutes/>*/}
         </main>
 
 
