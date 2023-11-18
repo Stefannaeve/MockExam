@@ -26,7 +26,7 @@ function MovieList() {
                 type="text"
                 value={newMovie}
                 onChange={(e) => setNewMovie(e.target.value)}
-                placeholder="Add a new movie"
+                placeholder="Add a new movies"
             />
             <button onClick={addMovie}>Add Movie</button>
             <ul>
