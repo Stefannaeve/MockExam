@@ -1,4 +1,12 @@
+import {BrowserRouter} from "react-router-dom";
+
+function homePage(){
+
+}
 
 export function Application(){
-    return <h1>Hei Amundo Secundo</h1>
+    return <BrowserRouter>
+        <h1>Movie Application</h1>
+
+    </BrowserRouter>
 }
