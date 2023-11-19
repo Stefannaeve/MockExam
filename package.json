@@ -16,5 +16,8 @@
     "push": "git push origin master && git push heroku master",
     "check:prettier": "prettier --check .",
     "prettier": "prettier --write ."
+  },
+  "dependencies": {
+    "mongodb": "^6.3.0"
   }
 }
