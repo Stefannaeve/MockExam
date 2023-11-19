@@ -112,8 +112,7 @@ function ListMovies({movies}) {
     }, []);
 
     async function loadMovies() {
-        const res = await fetch("/api/movies")
-        setTasks(await res.json());
+        setTasks(movies)
     }
 
 
