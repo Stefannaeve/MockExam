@@ -1,70 +1,117 @@
-import {BrowserRouter, Link, Route, Routes} from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import ReactDOM from "react-dom/client";
 
-function homePage() {
+import "./application.css"
+import {HashRouter, json, Link, Route, Routes, useNavigate} from "react-router-dom";
 
-    return <div>
-        <h1>Home Page</h1>
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+function FrontPage() {
+    return <>
+        <h2>Welcome to the Movie application</h2>
         <ul>
-            <li><Link to={"/movies"}>Movies</Link></li>
-            <li><Link to={"/addMovies"}>Movies</Link></li>
+            <li><Link to={"/movies"}>List movies</Link></li>
+            <li><Link to={"/movies/new"}>Create new movie</Link></li>
         </ul>
-    </div>
-
+    </>;
 }
 
-function MovieList() {
-    const [movies, setMovies] = useState([]);
-    const [newMovie, setNewMovie] = useState('');
+function ListMovies({movies}) {
 
-    const addMovie = () => {
-        if (newMovie) {
-            setMovies([...movies, newMovie]);
-            setNewMovie('');
-        }
-    };
+    return <>
+        <h2>All the movies</h2>
+        {movies.map(
+            movie => <div key={movie.title}>{movie.title} ({movie.year})</div>
+        )}
+    </>
+}
 
-    return (
+function CreateMovie({onCreateMovie}) {
+    const [title, setTitle] = useState("");
+    const [year, setYear] = useState("");
+    const [plot, setPlot] = useState("");
 
-        // <form onSubmit={}>
+    const navigate = useNavigate();
+
+    const movie = {title, year, plot};
+
+    function handleSubmitMovie(e) {
+        e.preventDefault();
+        onCreateMovie(movie);
+        navigate("/movies");
+    }
+
+
+    return <>
+        <h2>Create new movie</h2>
+        <form onSubmit={handleSubmitMovie}>
             <div>
-                <input
-                    type="text"
-                    value={newMovie}
-                    onChange={(e) => setNewMovie(e.target.value)}
-                    placeholder="Add a new movie"
-                />
-                <button onClick={addMovie}>Add Movie</button>
-                <ul>
-                    {movies.map((movie, index) => (
-                        <li key={index}>{movie}</li>
-                    ))}
-                </ul>
+                <label>
+                    Title:
+                    <br/>
+                    <input value={title} onChange={e => setTitle(e.target.value)}/>
+                </label>
             </div>
-        // </form>
-    );
+            <div>
+                <label>
+                    Year:
+                    <br/>
+                    <input value={year} onChange={e => setYear(e.target.value)}/>
+                </label>
+            </div>
+            <div>
+                <label>
+                    Plot:
+                    <br/>
+                    <textarea value={plot} onChange={e => setPlot(e.target.value)}/>
+                </label>
+            </div>
+            <button>Submit</button>
+            <pre>{JSON.stringify(movie, null, "  ")}</pre>
+        </form>
+    </>
 }
 
-// <li><Link to="/">Home</Link></li>
-// <TodoRoutes/>
 
 export function Application() {
-    return <BrowserRouter>
-        <header>
-            <h1>Movie Application</h1>
-        </header>
-        <nav>
-            <Link to={"/"}>Home</Link>
-        </nav>
+    const [movies, setMovies] = useState([]);
+
+    async function fetchMovies() {
+        const res = await fetch("/api/movies");
+        setMovies(await res.json());
+    }
+
+    useEffect( () => {
+        fetchMovies();
+    }, [])
+
+    async function handleCreateMovie(movie) {
+        await fetch("/api/movies", {
+            method: "post",
+            body: JSON.stringify(movie),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+    }
+
+    return <HashRouter>
+        <header><h1>Movie Application with API</h1></header>
+        <nav><Link to={"/"}>Home page</Link></nav>
         <main>
             <Routes>
-                <Route path={"/"} element={<homePage/>}/>
-            </Routes>
-            <Routes>
-                <Route path={"/addMovies"} element={<addMovie/>}/>
+                <Route path={"/"} element={<FrontPage />} />
+                <Route path={"/movies/new"} element={
+                    <CreateMovie onCreateMovie={handleCreateMovie} />
+                } />
+                <Route path={"/movies"} element={
+                    <ListMovies movies={movies} />
+                } />
+                <Route path={"*"} element={<h2>Not found</h2>} />
             </Routes>
         </main>
         <footer>
-            By Stefan the Awesome
+            By Johannes Brodwall for Kristiania 2023
         </footer>
-    </BrowserRouter>
+    </HashRouter>;
 }
