@@ -107,14 +107,16 @@ function AddTaskButton({reload}) {
 
 function ListMovies({movies}) {
     const [tasks, setTasks] = useState();
-    useEffect(() => {
-        loadMovies();
-    }, []);
+
 
     async function loadMovies() {
         setTasks(movies)
+        //const res = await fetch("/api/movies");
+        //         setMovies(await res.json());
     }
-
+    useEffect(() => {
+        loadMovies();
+    }, []);
 
     return <>
         <h1>The task application</h1>
