@@ -22,3 +22,8 @@ To get the MockExam project up and running on your local machine, follow these s
    `npm install`
 2. Start the server and client concurrently:
    `npm run dev`
+
+
+##
+- server.js
+  -  

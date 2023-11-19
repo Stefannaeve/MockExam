@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 
 import "./application.css";
 import {
+    BrowserRouter,
     HashRouter,
     json,
     Link,
@@ -126,17 +127,15 @@ function ListMovies({movies}) {
 
 function CreateMovie({onCreateMovie}) {
     const [title, setTitle] = useState("");
-    const [year, setYear] = useState("");
-    const [plot, setPlot] = useState("");
 
     const navigate = useNavigate();
 
-    const movie = {title, year, plot};
+    const movie = {title};
 
     function handleSubmitMovie(e) {
         e.preventDefault();
         onCreateMovie(movie);
-        navigate("/movies");
+        navigate("/listMovies");
     }
 
     return (
@@ -150,20 +149,7 @@ function CreateMovie({onCreateMovie}) {
                         <input value={title} onChange={(e) => setTitle(e.target.value)}/>
                     </label>
                 </div>
-                <div>
-                    <label>
-                        Year:
-                        <br/>
-                        <input value={year} onChange={(e) => setYear(e.target.value)}/>
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        Plot:
-                        <br/>
-                        <textarea value={plot} onChange={(e) => setPlot(e.target.value)}/>
-                    </label>
-                </div>
+
                 <button>Submit</button>
                 <pre>{JSON.stringify(movie, null, "  ")}</pre>
             </form>
@@ -194,7 +180,7 @@ export function Application() {
     }
 
     return (
-        <HashRouter>
+        <BrowserRouter>
             <header>
                 <h1>Movie Application with API</h1>
             </header>
@@ -213,6 +199,6 @@ export function Application() {
                 </Routes>
             </main>
             <footer>By Johannes Brodwall for Kristiania 2023</footer>
-        </HashRouter>
+        </BrowserRouter>
     );
 }

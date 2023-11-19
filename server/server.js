@@ -1,7 +1,9 @@
 import express from "express";
 import bodyParser from "body-parser";
-import dotenv from "nodemon";
+import { createMoviesRouter, apiMovies } from "./ApiMovies.js";
+import dotenv from "dotenv";
 import {MongoClient} from "mongodb";
+import * as path from "path";
 
 const app = express();
 
@@ -9,47 +11,28 @@ const app = express();
 dotenv.config();
 
 app.use(bodyParser.json());
+// Use the link api movies to connect to ApiMovies.js
+// app.use means that you are constantly using the link
+app.use("/api/movies", apiMovies);
 
 // This gives you access to mongoDB
-const url = process.env.MONGODB_URL;
+const url = process.env.URL_FROM_MONGODB;
 const client = new MongoClient(url);
 
-const movies = [
-    {
-        id: 0,
-        title: "Interstellar",
-        status: "done"
-    },
-    {
-        id: 1,
-        title: "Oppenheimer",
-        status: "done"
-    },
-    {
-        id: 2,
-        title: "Life of Brian",
-        status: "doing"
-    }
-]
-
-app.get("/api/movies", (req, res) => {
-    res.send(movies);
+client.connect().then((connection) => {
+    const db = connection.db("ExamTest");
+    createMoviesRouter(db);
 });
-
-app.post("/api/movies", (req, res) => {
-    const {title} = req.body;
-    const newTask = {title, status: "todo", id: movies.length};
-    movies.push(newTask);
-    res.send();
-});
-
-app.put("/api/movies/:id", (req, res) => {
-    const id = parseInt(req.params.id);
-    movies.find(t => t.id === id).status = req.body.status;
-    res.send();
-})
 
 app.use(express.static("../client/dist"));
+
+app.use((req, res, next) =>  {
+    if (req.method === "GET" && !req.path.startsWith("/api")) {
+        res.sendFile(path.resolve("../client/dist/index.html"));
+    }else {
+        next();
+    }
+});
 
 
 app.listen(3000);
